@@ -11,11 +11,10 @@ const app = express();
 app.use(cors());
 
 app.post("/interactions", (req, res) => {
-  res.send("interactions ok");
-});
-
-app.get("/register_commands", (req, res) => {
-  res.send("register_commands ok");
+  res.json({
+    type: 1,
+    data: "pong",
+  });
 });
 
 app.get("/", async (req, res) => {
