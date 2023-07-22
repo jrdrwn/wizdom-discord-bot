@@ -1,0 +1,14 @@
+{
+  "scripts": {
+    "start": "yarn start:commands && node src/main.js",
+    "dev": "nodemon src/main.js",
+    "start:commands": "node src/deploy-commands.js"
+  },
+  "dependencies": {
+    "discord.js": "^14.11.0",
+    "dotenv": "^16.3.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}
