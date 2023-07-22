@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "start": "yarn start:commands && node src/main.js",
+    "start": "node src/deploy-commands.js && node src/main.js",
     "dev": "nodemon src/main.js",
     "start:commands": "node src/deploy-commands.js"
   },
