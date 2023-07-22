@@ -5,8 +5,10 @@ const path = require("path");
 const { Client, Collection, Events, GatewayIntentBits } = require("discord.js");
 const env = require("./config/env");
 const express = require("express");
-
+const cors = require("cors");
 const app = express();
+
+app.use(cors());
 
 app.post("/interactions", (req, res) => {
   res.send("interactions ok");
