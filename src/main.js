@@ -74,17 +74,6 @@ app.post(
   (req, res) => {
     const message = req.body;
 
-    const signature = req.get("X-Signature-Ed25519");
-    const timestamp = req.get("X-Signature-Timestamp");
-    const isValidRequest = verifyKey(
-      req.rawBody,
-      signature,
-      timestamp,
-      env.bot.publicKey
-    );
-    if (!isValidRequest) {
-      return res.status(401).end("Bad request signature");
-    }
     if (message.type === InteractionType.APPLICATION_COMMAND) {
       res.send({
         type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
