@@ -6,6 +6,7 @@ const { Client, Collection, Events, GatewayIntentBits } = require("discord.js");
 const env = require("./config/env");
 const express = require("express");
 const cors = require("cors");
+const { verifyKeyMiddleware } = require("discord-interactions");
 const app = express();
 
 app.use(cors());
@@ -67,12 +68,29 @@ client.once(Events.ClientReady, (c) => {
   console.log(`Ready! Logged in as ${c.user.tag}`);
 });
 
-app.post("/api/interactions", async (req, res) => {
-  await client.login(env.bot.token);
-  res.json({
-    type: 1,
-    data: "pong",
-  });
+app.post("/interactions", verifyKeyMiddleware(env.bot.clientId), (req, res) => {
+  const message = req.body;
+
+  const signature = req.get("X-Signature-Ed25519");
+  const timestamp = req.get("X-Signature-Timestamp");
+  const isValidRequest = verifyKey(
+    req.rawBody,
+    signature,
+    timestamp,
+    env.bot.clientId
+  );
+  if (!isValidRequest) {
+    return res.status(401).end("Bad request signature");
+  }
+
+  if (message.type === InteractionType.APPLICATION_COMMAND) {
+    res.send({
+      type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+      data: {
+        content: "Hello world",
+      },
+    });
+  }
 });
 
 app.get("/", async (req, res) => {
