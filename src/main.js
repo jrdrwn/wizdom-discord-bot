@@ -6,7 +6,11 @@ const { Client, Collection, Events, GatewayIntentBits } = require("discord.js");
 const env = require("./config/env");
 const express = require("express");
 const cors = require("cors");
-const { verifyKeyMiddleware, verifyKey } = require("discord-interactions");
+const {
+  verifyKeyMiddleware,
+  InteractionType,
+  InteractionResponseType,
+} = require("discord-interactions");
 const app = express();
 
 app.use(cors());
