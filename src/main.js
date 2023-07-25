@@ -68,8 +68,7 @@ client.once(Events.ClientReady, (c) => {
 });
 
 app.post("/api/interactions", (req, res) => {
-  !client.isReady() && client.login(env.bot.token);
-
+  console.log(client.isReady());
   res.json({
     type: 1,
     data: "pong",
@@ -80,7 +79,7 @@ app.get("/", async (req, res) => {
   res.send("ok");
 });
 
-app.listen(env.port, () => {
-  !client.isReady() && client.login(env.bot.token);
+app.listen(env.port, async () => {
+  !client.isReady() && (await client.login(env.bot.token));
   console.log(`Server is listening on port ${env.port}`);
 });
