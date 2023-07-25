@@ -10,17 +10,6 @@ const app = express();
 
 app.use(cors());
 
-app.post("/interactions", (req, res) => {
-  res.json({
-    type: 1,
-    data: "pong",
-  });
-});
-
-app.get("/", async (req, res) => {
-  res.send("ok");
-});
-
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
 client.commands = new Collection();
@@ -78,8 +67,20 @@ client.once(Events.ClientReady, (c) => {
   console.log(`Ready! Logged in as ${c.user.tag}`);
 });
 
-app.listen(env.port, () => {
-  console.log(`Server is listening on port ${env.port}`);
+app.post("api/interactions", (req, res) => {
+  !client.isReady() && client.login(env.bot.token);
 
-  client.login(env.bot.token);
+  res.json({
+    type: 1,
+    data: "pong",
+  });
+});
+
+app.get("/", async (req, res) => {
+  res.send("ok");
+});
+
+app.listen(env.port, () => {
+  !client.isReady() && client.login(env.bot.token);
+  console.log(`Server is listening on port ${env.port}`);
 });
