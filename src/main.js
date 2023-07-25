@@ -67,7 +67,7 @@ client.once(Events.ClientReady, (c) => {
   console.log(`Ready! Logged in as ${c.user.tag}`);
 });
 
-app.post("api/interactions", (req, res) => {
+app.post("/api/interactions", (req, res) => {
   !client.isReady() && client.login(env.bot.token);
 
   res.json({
