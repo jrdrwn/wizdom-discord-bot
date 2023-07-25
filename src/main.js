@@ -68,18 +68,33 @@ client.once(Events.ClientReady, (c) => {
   console.log(`Ready! Logged in as ${c.user.tag}`);
 });
 
-app.post("/interactions", verifyKeyMiddleware(env.bot.clientId), (req, res) => {
-  const message = req.body;
+app.post(
+  "/interactions",
+  verifyKeyMiddleware(env.bot.publicKey),
+  (req, res) => {
+    const message = req.body;
 
-  if (message.type === InteractionType.APPLICATION_COMMAND) {
-    res.send({
-      type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
-      data: {
-        content: "Hello world",
-      },
-    });
+    const signature = req.get("X-Signature-Ed25519");
+    const timestamp = req.get("X-Signature-Timestamp");
+    const isValidRequest = verifyKey(
+      req.rawBody,
+      signature,
+      timestamp,
+      env.bot.publicKey
+    );
+    if (!isValidRequest) {
+      return res.status(401).end("Bad request signature");
+    }
+    if (message.type === InteractionType.APPLICATION_COMMAND) {
+      res.send({
+        type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+        data: {
+          content: "Hello world",
+        },
+      });
+    }
   }
-});
+);
 
 app.get("/", async (req, res) => {
   res.send("ok");
