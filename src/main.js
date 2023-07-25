@@ -67,8 +67,8 @@ client.once(Events.ClientReady, (c) => {
   console.log(`Ready! Logged in as ${c.user.tag}`);
 });
 
-app.post("/api/interactions", (req, res) => {
-  console.log(client.isReady());
+app.post("/api/interactions", async (req, res) => {
+  await client.login(env.bot.token);
   res.json({
     type: 1,
     data: "pong",
@@ -80,6 +80,6 @@ app.get("/", async (req, res) => {
 });
 
 app.listen(env.port, async () => {
-  !client.isReady() && (await client.login(env.bot.token));
+  await client.login(env.bot.token);
   console.log(`Server is listening on port ${env.port}`);
 });
